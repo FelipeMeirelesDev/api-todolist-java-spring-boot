@@ -1,5 +1,6 @@
 package br.com.felipemeireles.todolist.controller;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import br.com.felipemeireles.todolist.model.UsuarioModel;
 import br.com.felipemeireles.todolist.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,14 @@ public class UsuarioController {
 
         //Validando se existe algum usuário com as mesmas informações.
         if (usuario != null){
-            System.out.println("Usuário já existe");
+            // Mensagem de erro
+            // Status Code
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuário já existe");
         }
+
+        var passwordHashred = BCrypt.withDefaults().hashToString(12, usuarioModel.getSenha().toCharArray());
+
+        usuarioModel.setSenha(passwordHashred);
 
         var usuarioCriado = usuarioRepository.save(usuarioModel);
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioCriado);
