@@ -1,4 +1,4 @@
-package br.com.felipemeireles.todolist.task;
+package br.com.felipemeireles.todolist.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
