@@ -2,6 +2,7 @@ package br.com.felipemeireles.todolist.controller;
 
 import br.com.felipemeireles.todolist.repository.TaskRepository;
 import br.com.felipemeireles.todolist.model.TaskModel;
+import br.com.felipemeireles.todolist.utils.Utils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,5 +46,18 @@ public class TaskController {
         var idUser = request.getAttribute("idUser");
         var tasks = taskRepository.findById((UUID) idUser);
         return tasks;
+    }
+
+    @PutMapping("/{id}")
+    public TaskModel update(@RequestBody TaskModel taskModel, HttpServletRequest request, @PathVariable UUID id){
+        var idUser = request.getAttribute("idUser");
+
+        var task = this.taskRepository.findById(id).orElse(null);
+
+        Utils.copyNonNullProperties(taskModel, task);
+
+        taskModel.setIdUser ((UUID) idUser);
+        taskModel.setId(id);
+        return taskRepository.save(taskModel);
     }
 }
